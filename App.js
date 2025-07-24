@@ -1,67 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, ScrollView, Text } from 'react-native';
 import EditableTimer from './components/EditableTimer';
 import ToggleableTimerForm from './components/ToggleableTimerForm';
 import { newTimer } from './Utils/TimerUtils';
 import * as Crypto from 'expo-crypto';
 
+export default function App() {
+  const [timers, setTimers] = useState([
+    {
+      title: 'Title 1',
+      project: 'Project 1',
+      id: Crypto.randomUUID(),
+      elapsed: 5456099,
+      isRunning: true,
+    },
+    {
+      title: 'Title 2',
+      project: 'Project 2',
+      id: Crypto.randomUUID(),
+      elapsed: 1273998,
+      isRunning: false,
+    },
+  ]);
 
-export default class App extends React.Component {
-  state = {
-    timers: [
-      {
-        title: 'Mow the lawn',
-        project: 'House Chores',
-        id: Crypto.randomUUID(),
-        elapsed: 5456099,
-        isRunning: true,
-      },
-      {
-        title: 'Bake squash',
-        project: 'Kitchen Chores',
-        id: Crypto.randomUUID(),
-        elapsed: 1273998,
-        isRunning: false,
-      },
-    ],
-  };
-  handleCreateFormSubmit = (timer) => {
-    const { timers } = this.state;
-    this.setState({
-      timers: [newTimer(timer), ...timers],
-    });
+  const handleCreateFormSubmit = (timer) => {
+    setTimers(prevTimers => [newTimer(timer), ...prevTimers]);
   };
 
-  handleTimerRemove = (timerId) => {
-    const { timers } = this.state;
-    this.setState({
-      timers: timers.filter(timer => timer.id !== timerId),
-    });
+  const handleTimerRemove = (timerId) => {
+    setTimers(prevTimers => prevTimers.filter(timer => timer.id !== timerId));
   };
-  render() {
-    const { timers } = this.state;
-    return (
-      <View style={styles.appContainer}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Timers</Text>
-        </View>
-        <ScrollView style={styles.timerList}>
-          <ToggleableTimerForm onFormSubmit={this.handleCreateFormSubmit} />
-          {timers.map(({ title, project, id, elapsed, isRunning }) => (
-            <EditableTimer
-              key={id}
-              id={id}
-              title={title}
-              project={project}
-              elapsed={elapsed}
-              isRunning={isRunning}
-              onTimerRemove={this.handleTimerRemove}
-            />
-          ))}
-        </ScrollView>
+
+  return (
+    <View style={styles.appContainer}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Timers</Text>
       </View>
-    );
-  }
+      <ScrollView style={styles.timerList}>
+        <ToggleableTimerForm onFormSubmit={handleCreateFormSubmit} />
+        {timers.map(({ title, project, id, elapsed, isRunning }) => (
+          <EditableTimer
+            key={id}
+            id={id}
+            title={title}
+            project={project}
+            elapsed={elapsed}
+            isRunning={isRunning}
+            onTimerRemove={handleTimerRemove}
+            onFormSubmit={handleCreateFormSubmit}
+          />
+        ))}
+      </ScrollView>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
