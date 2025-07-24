@@ -28,6 +28,7 @@ export default function App() {
   };
 
   const handleTimerRemove = (timerId) => {
+    
     setTimers(prevTimers => prevTimers.filter(timer => timer.id !== timerId));
   };
 

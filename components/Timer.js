@@ -1,12 +1,24 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Alert } from 'react-native';
 import { millisecondsToHuman } from '../Utils/TimerUtils';
 import TimerButton from './TimerButton';
 export default function Timer({ id, title, project, elapsed, onTimerRemove, editPress }) {
   const elapsedString = millisecondsToHuman(elapsed);
   
   const handleRemove = () => {
-    onTimerRemove(id);
+    Alert.alert(
+      'Remove Timer',
+      `Are you sure you want to remove "${title}"?`,
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Remove',
+          onPress: () => onTimerRemove(id),
+        },
+      ]
+    );
   };
 
   return (
