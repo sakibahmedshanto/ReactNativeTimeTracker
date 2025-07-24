@@ -2,8 +2,13 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { millisecondsToHuman } from '../Utils/TimerUtils';
 import TimerButton from './TimerButton';
-export default function Timer({ title, project, elapsed }) {
+export default function Timer({ id, title, project, elapsed, onTimerRemove }) {
   const elapsedString = millisecondsToHuman(elapsed);
+  
+  const handleRemove = () => {
+    onTimerRemove(id);
+  };
+
   return (
     <View style={styles.timerContainer}>
       <Text style={styles.title}>{title}</Text>
@@ -11,7 +16,7 @@ export default function Timer({ title, project, elapsed }) {
       <Text style={styles.elapsedTime}>{elapsedString}</Text>
       <View style={styles.buttonGroup}>
         <TimerButton color="blue" small title="Edit" />
-        <TimerButton color="blue" small title="Remove" />
+        <TimerButton color="blue" small title="Remove" onPress={handleRemove} />
       </View>
       <TimerButton color="#21BA45" title="Start" />
     </View>

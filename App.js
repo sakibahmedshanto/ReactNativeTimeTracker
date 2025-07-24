@@ -31,6 +31,13 @@ export default class App extends React.Component {
       timers: [newTimer(timer), ...timers],
     });
   };
+
+  handleTimerRemove = (timerId) => {
+    const { timers } = this.state;
+    this.setState({
+      timers: timers.filter(timer => timer.id !== timerId),
+    });
+  };
   render() {
     const { timers } = this.state;
     return (
@@ -48,6 +55,7 @@ export default class App extends React.Component {
               project={project}
               elapsed={elapsed}
               isRunning={isRunning}
+              onTimerRemove={this.handleTimerRemove}
             />
           ))}
         </ScrollView>
